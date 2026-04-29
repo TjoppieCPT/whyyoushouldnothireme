@@ -1,1 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Do NOT Hire Me ;)</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+
+<style>
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  background: #fdfdfd;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10vh 20px 80px;
+  text-align: center;
+  overflow-x: hidden; 
+}
+
+.lang-switch {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  display: flex;
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 50px;
+  padding: 4px;
+  box-shadow: 6px 6px 0px #000;
+  cursor: pointer;
+  z-index: 1000;
+  width: 110px;
+  user-select: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lang-switch:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px #000;
+}
+
+.lang-slider {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  background: #000;
+  border-radius: 50px;
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.lang-switch.de .lang-slider {
+  transform: translateX(100%);
+}
+
+.lang-label {
+  flex: 1;
+  text-align: center;
+  font-weight: 900;
+  font-size: 0.9rem;
+  padding: 6px 0;
+  z-index: 2;
+  color: #000;
+  transition: color 0.3s ease;
+}
+
+.lang-label.active {
+  color: #fff;
+}
+
+/* THE FIX: Allows wrapping but balances it beautifully */
+h1 {
+  font-size: clamp(2rem, 3.8vw, 4rem); 
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  margin-bottom: 10px;
+  max-width: 95vw; /* Prevents edge bleeding */
+  white-space: normal; /* Allows the longer German to wrap */
+  line-height: 1.1; /* Keeps the wrapped lines tight together */
+  text-wrap: balance; /* Modern CSS: ensures the two lines look perfectly balanced */
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ef4444; 
+  max-width: 700px;
+  margin: 0 auto 25px auto;
+  line-height: 1.6;
+}
+
+.instruction {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #555; 
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 50px; 
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+.fly-in {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeIn 0.8s ease forwards;
+  margin-right: 4px; 
+}
+
+.delay-1 { animation-delay: 0.2s; }
+.delay-2 { animation-delay: 0.6s; }
+.delay-3 { animation-delay: 1.0s; }
+
+.grid {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap; 
+  max-width: 1250px;
+  width: 100%;
+}
+
+.card {
+  width: 100%;
+  max-width: 280px;
+  height: 320px;
+  perspective: 1200px;
+  cursor: pointer;
+}
+
+.card-inner {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.card:hover .card-inner, 
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px; 
+  padding: 30px;
+  box-sizing: border-box;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-front {
+  background: #fff;
+  border: 3px solid #000;
+  box-shadow: 8px 8px 0px #000;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.card:hover .card-front {
+  transform: translate(-4px, -4px);
+  box-shadow: 12px 12px 0px #000;
+}
+
+.card-num {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #000;
+  margin-bottom: 15px;
+  line-height: 1;
+}
+
+.card-front h2 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.card-back {
+  background: #000;
+  color: #fff;
+  transform: rotateY(180deg);
+  border: 3px solid #000;
+}
+
+.card-back p {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.card-back span {
+  font-weight: 800;
+  color: #ef4444;
+}
+
+.cta {
+  margin-top: 80px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 48px;
+  background: #000;
+  color: #fff;
+  font-weight: 800;
+  text-decoration: none;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  border: 2px solid #000;
+}
+
+.arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-4px); 
+  background: #fff;
+  color: #000;
+}
+
+.btn:hover .arrow {
+  transform: translateX(6px);
+}
+
+.cta-sub {
+  margin-top: 18px;
+  color: #555;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeIn 1s ease forwards;
+  animation-delay: 1.5s; 
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 900px) {
+  .card { height: 280px; max-width: 300px;}
+  .card-front h2 { font-size: 1.4rem; }
+  .card-num { font-size: 1.8rem; }
+  .lang-switch { top: 15px; right: 15px; } 
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 12vh 15px 50px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 10px; 
+  }
+  
+  .card {
+    width: 100%; 
+    max-width: none;
+    height: 230px; 
+  }
+  
+  .card-front, .card-back {
+    padding: 12px; 
+  }
+  
+  .card-front h2 {
+    font-size: 1rem; 
+  }
+  
+  .card-num {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+  }
+  
+  .card-back p {
+    font-size: 0.75rem; 
+    line-height: 1.35;
+    word-wrap: break-word;
+    -webkit-hyphens: auto;
+    hyphens: auto; 
+  }
+  
+  .subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+  }
+  
+  .instruction {
+    font-size: 0.7rem;
+    margin-bottom: 30px;
+  }
+  
+  .btn {
+    padding: 15px 30px;
+    font-size: 1rem;
+  }
+
+  .cta {
+    margin-top: 50px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="lang-switch" id="lang-switch" onclick="toggleLanguage()">
+  <div class="lang-slider"></div>
+  <div class="lang-label active" id="lbl-en">EN</div>
+  <div class="lang-label" id="lbl-de">DE</div>
+</div>
+
+<h1 id="t-title">4 Reasons You Should NOT Hire Me.</h1>
+
+<p class="subtitle">
+  <span class="fly-in delay-1" id="t-sub1">I break systems.</span>
+  <span class="fly-in delay-2" id="t-sub2">I question everything.</span>
+  <span class="fly-in delay-3" id="t-sub3">I optimise aggressively.</span>
+</p>
+
+<p class="instruction" id="t-instruct">Hover or tap cards to inspect</p>
+
+<div class="grid">
+  <div class="card" onclick="flipCard(this)">
+    <div class="card-inner">
+      <div class="card-front">
+        <div class="card-num">1</div>
+        <h2 id="t-c1h">I will destroy your current workflows.</h2>
+      </div>
+      <div class="card-back">
+        <p id="t-c1p">Because I use Lean/Kaizen and AnyLogic simulation to <span>reduce process flow time by 67%</span>. I optimise until it's perfect.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" onclick="flipCard(this)">
+    <div class="card-inner">
+      <div class="card-front">
+        <div class="card-num">2</div>
+        <h2 id="t-c2h">I am obsessed with the numbers.</h2>
+      </div>
+      <div class="card-back">
+        <p id="t-c2p">I automate disruption analysis using Python & R, successfully safeguarding <span>€10M+ in digital inventory</span> across 30,000+ touchpoints.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" onclick="flipCard(this)">
+    <div class="card-inner">
+      <div class="card-front">
+        <div class="card-num">3</div>
+        <h2 id="t-c3h">I refuse to just "do what I am told."</h2>
+      </div>
+      <div class="card-back">
+        <p id="t-c3p">I proactively engineer solutions. It's why I ranked <span>#1 out of 63</span> in my M.Sc. Supply Chain class and hold a Certified AGILean Master.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" onclick="flipCard(this)">
+    <div class="card-inner">
+      <div class="card-front">
+        <div class="card-num">4</div>
+        <h2 id="t-c4h">I don't think like an employee.</h2>
+      </div>
+      <div class="card-back">
+        <p id="t-c4p">As Co-Founder & Head of Ops of an Odoo agency I built with my brother, plus <span>12 years in Cape Town</span>, I bring a global, founder-level mindset.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cta">
+  <a id="t-mailto" class="btn" href="mailto:jimmywaynebrandon@gmail.com?subject=GitHub%20Profile%20-%20CV%20Request&body=Hi%20Brandon%2C%0D%0A%0D%0AI%20saw%20your%20GitHub%20page%20and%20would%20love%20to%20take%20a%20look%20at%20your%20CV.%0D%0A%0D%0ABest%2C%0D%0A%5BYour%20Name%5D">
+    <span id="t-btn">I think we can handle that. Request CV.</span>
+    <span class="arrow">→</span>
+  </a>
+  <p class="cta-sub" id="t-ctasub">Most companies want employees. The best ones want leverage.</p>
+</div>
+
+<script>
+// Card flipping script
+function flipCard(card) {
+  card.classList.toggle("flipped");
+}
+
+// Translation Dictionary
+const i18n = {
+  en: {
+    title: "4 Reasons You Should NOT Hire Me.",
+    sub1: "I break systems.",
+    sub2: "I question everything.",
+    sub3: "I optimise aggressively.",
+    instruct: "Hover or tap cards to inspect",
+    c1h: "I will destroy your current workflows.",
+    c1p: "Because I use Lean/Kaizen and AnyLogic simulation to <span>reduce process flow time by 67%</span>. I optimise until it's perfect.",
+    c2h: "I am obsessed with the numbers.",
+    c2p: "I automate disruption analysis using Python & R, successfully safeguarding <span>€10M+ in digital inventory</span> across 30,000+ touchpoints.",
+    c3h: "I refuse to just \"do what I am told.\"",
+    c3p: "I proactively engineer solutions. It's why I ranked <span>#1 out of 63</span> in my M.Sc. Supply Chain class and hold a Certified AGILean Master.",
+    c4h: "I don't think like an employee.",
+    c4p: "As Co-Founder & Head of Ops of an Odoo agency I built with my brother, plus <span>12 years in Cape Town</span>, I bring a global, founder-level mindset.",
+    btn: "I think we can handle that. Request CV.",
+    ctasub: "Most companies want employees. The best ones want leverage.",
+    mailto: "mailto:jimmywaynebrandon@gmail.com?subject=GitHub%20Profile%20-%20CV%20Request&body=Hi%20Brandon%2C%0D%0A%0D%0AI%20saw%20your%20GitHub%20page%20and%20would%20love%20to%20take%20a%20look%20at%20your%20CV.%0D%0A%0D%0ABest%2C%0D%0A%5BYour%20Name%5D"
+  },
+  de: {
+    title: "4 Gründe, warum Sie mich NICHT einstellen sollten.",
+    sub1: "Ich breche Systeme.",
+    sub2: "Ich hinterfrage alles.",
+    sub3: "Ich optimiere aggressiv.",
+    instruct: "Karten zum Aufdecken antippen oder darüberfahren",
+    c1h: "Ich zerstöre Ihre aktuellen Workflows.",
+    c1p: "Weil ich Lean/Kaizen und AnyLogic-Simulationen einsetze, um <span>Prozessdurchlaufzeiten um 67% zu reduzieren</span>. Ich optimiere, bis es perfekt ist.",
+    c2h: "Ich bin besessen von Zahlen.",
+    c2p: "Ich automatisiere Störungsanalysen mit Python & R und schütze erfolgreich <span>über 10 Mio. € an digitalem Inventar</span> an 30.000+ Touchpoints.",
+    c3h: "Ich weigere mich, nur 'Dienst nach Vorschrift' zu tun.",
+    c3p: "Ich entwickle proaktiv Lösungen. Deshalb war ich <span>Nr. 1 von 63</span> im M.Sc. Supply Chain und bin Certified AGILean Master.",
+    c4h: "Ich denke nicht wie ein Angestellter.",
+    c4p: "Als Co-Founder & Head of Ops einer Odoo-Agentur (mit meinem Bruder) und <span>12 Jahren in Kapstadt</span> bringe ich ein echtes globales Founder-Mindset mit.",
+    btn: "Das kriegen wir hin. CV anfordern.",
+    ctasub: "Die meisten Firmen suchen Angestellte. Die besten suchen einen echten Hebel.",
+    mailto: "mailto:jimmywaynebrandon@gmail.com?subject=GitHub%20Profil%20-%20CV%20Anfrage&body=Hallo%20Brandon%2C%0D%0A%0D%0AIch%20habe%20deine%20GitHub-Seite%20gesehen%20und%20w%C3%BCrde%20mir%20gerne%20deinen%20CV%20ansehen.%0D%0A%0D%0ABeste%20Gr%C3%BC%C3%9Fe%2C%0D%0A%5BIhr%20Name%5D"
+  }
+};
+
+let currentLang = localStorage.getItem('siteLang') || 'en';
+
+function applyLanguage(lang) {
+  const switchEl = document.getElementById('lang-switch');
+  const lblEn = document.getElementById('lbl-en');
+  const lblDe = document.getElementById('lbl-de');
+
+  if (lang === 'de') {
+    switchEl.classList.add('de');
+    lblDe.classList.add('active');
+    lblEn.classList.remove('active');
+  } else {
+    switchEl.classList.remove('de');
+    lblEn.classList.add('active');
+    lblDe.classList.remove('active');
+  }
+
+  document.getElementById('t-title').innerHTML = i18n[lang].title;
+  document.getElementById('t-sub1').innerHTML = i18n[lang].sub1;
+  document.getElementById('t-sub2').innerHTML = i18n[lang].sub2;
+  document.getElementById('t-sub3').innerHTML = i18n[lang].sub3;
+  document.getElementById('t-instruct').innerHTML = i18n[lang].instruct;
+  document.getElementById('t-c1h').innerHTML = i18n[lang].c1h;
+  document.getElementById('t-c1p').innerHTML = i18n[lang].c1p;
+  document.getElementById('t-c2h').innerHTML = i18n[lang].c2h;
+  document.getElementById('t-c2p').innerHTML = i18n[lang].c2p;
+  document.getElementById('t-c3h').innerHTML = i18n[lang].c3h;
+  document.getElementById('t-c3p').innerHTML = i18n[lang].c3p;
+  document.getElementById('t-c4h').innerHTML = i18n[lang].c4h;
+  document.getElementById('t-c4p').innerHTML = i18n[lang].c4p;
+  document.getElementById('t-btn').innerHTML = i18n[lang].btn;
+  document.getElementById('t-ctasub').innerHTML = i18n[lang].ctasub;
+  document.getElementById('t-mailto').href = i18n[lang].mailto;
+}
+
+function toggleLanguage() {
+  currentLang = currentLang === 'en' ? 'de' : 'en';
+  localStorage.setItem('siteLang', currentLang);
+  applyLanguage(currentLang);
+}
+
+window.onload = function() {
+  applyLanguage(currentLang);
+};
+</script>
+
+</body>
+</html>
